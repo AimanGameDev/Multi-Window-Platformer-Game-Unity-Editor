@@ -4,7 +4,7 @@ namespace EditorPlatformer.Editor
 {
     public struct Info
     {
-        public static readonly Vector2 PlayerSize = new Vector2(30f, 30f);
+        public static readonly Vector2 PlayerSize = new Vector2(50f, 50f);
         public static readonly Color PlayerColor = new Color(1f, 0f, 0f, 0.5f);
     }
 

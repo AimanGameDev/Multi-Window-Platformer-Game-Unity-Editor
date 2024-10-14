@@ -14,27 +14,31 @@ namespace EditorPlatformer.Editor
             mainWindow.minSize = Vector2.zero;
             mainWindow.maxSize = Vector2.zero;
 
-            var childWindow = CreateWindow<ChildWindow>(string.Empty);
-            childWindow.minSize = Info.PlayerSize;
+            var platformWindowName = $"Platform : {mainWindow.windowCount + 1}";
+            var platformWindow = CreateWindow<PlatformWindow>(platformWindowName);
+            platformWindow.minSize = Info.PlayerSize;
+            platformWindow.position = new Rect(0f, 0f, 200f, 200f);
 
-            mainWindow.Add(childWindow);
+            mainWindow.Add(platformWindow);
         }
 
-        public static void RemoveWindow(ChildWindow window)
+        public static void RemoveWindow(PlatformWindow window)
         {
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.Remove(window);
         }
 
-        [SerializeField] private List<ChildWindow> m_windows = new List<ChildWindow>();
+        public int windowCount => m_windows.Count;
+        
+        [SerializeField] private List<PlatformWindow> m_windows = new List<PlatformWindow>();
         [SerializeField] private Vector2 m_playerPosition = new Vector2(30f, 100f);
 
-        public void Add(ChildWindow window)
+        private void Add(PlatformWindow window)
         {
             m_windows.Add(window);
         }
 
-        public void Remove(ChildWindow window)
+        private void Remove(PlatformWindow window)
         {
             m_windows.Remove(window);
             if (m_windows.Count == 0)
@@ -67,15 +71,19 @@ namespace EditorPlatformer.Editor
                 var targetPosition = m_playerPosition;
                 switch (Event.current.keyCode)
                 {
+                    case KeyCode.W:
                     case KeyCode.UpArrow:
                         targetPosition.y -= 10f;
                         break;
+                    case KeyCode.S:
                     case KeyCode.DownArrow:
                         targetPosition.y += 10f;
                         break;
+                    case KeyCode.A:
                     case KeyCode.LeftArrow:
                         targetPosition.x -= 10f;
                         break;
+                    case KeyCode.D:
                     case KeyCode.RightArrow:
                         targetPosition.x += 10f;
                         break;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EditorPlatformer.Editor
 {
-    public class ChildWindow : EditorWindow
+    public class PlatformWindow : EditorWindow
     {
         [SerializeField] private PlayerArgs m_playerArgs;
 
