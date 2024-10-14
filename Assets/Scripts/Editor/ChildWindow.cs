@@ -4,34 +4,36 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class ChildWindow : EditorWindow
+namespace EditorPlatformer.Editor
 {
-    [SerializeField]
-    private PlayerArgs m_playerArgs;
-    
-    public void Tick(PlayerArgs args)
+    public class ChildWindow : EditorWindow
     {
-        m_playerArgs = args;    
-    }
+        [SerializeField] private PlayerArgs m_playerArgs;
 
-    public void OnGUI()
-    {
-        var playerCenter = m_playerArgs.center;
-        var playerSize = m_playerArgs.size;
-        var playerRect = new Rect(playerCenter.x - playerSize.x / 2, playerCenter.y - playerSize.y / 2, playerSize.x, playerSize.y);
-        
-        var windowPosition = position.position;
-        var windowSize = position.size;
-        
-        var playerRectInWindow = new Rect(playerRect.x - windowPosition.x, playerRect.y - windowPosition.y, playerRect.width, playerRect.height);
-        
-        EditorGUI.DrawRect(playerRectInWindow, Color.red);
+        public void Tick(PlayerArgs args)
+        {
+            m_playerArgs = args;
+        }
 
-        Repaint();
-    }
+        public void OnGUI()
+        {
+            var playerCenter = m_playerArgs.center;
+            var playerSize = m_playerArgs.size;
+            var playerRect = new Rect(playerCenter.x - playerSize.x / 2, playerCenter.y - playerSize.y / 2, playerSize.x, playerSize.y);
 
-    private void OnDestroy()
-    {
-        MainWindow.RemoveWindow(this);
+            var windowPosition = position.position;
+            var windowSize = position.size;
+
+            var playerRectInWindow = new Rect(playerRect.x - windowPosition.x, playerRect.y - windowPosition.y, playerRect.width, playerRect.height);
+
+            EditorGUI.DrawRect(playerRectInWindow, Color.red);
+
+            Repaint();
+        }
+
+        private void OnDestroy()
+        {
+            MainWindow.RemoveWindow(this);
+        }
     }
 }
