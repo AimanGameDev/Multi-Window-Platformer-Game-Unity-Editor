@@ -74,22 +74,33 @@ namespace EditorPlatformer.Editor
                         break;
                 }
 
-                var isInsideAnyWindow = false;
+                
+                var isLeftTopBound = false;
+                var isLeftBottomBound = false;
+                var isRightTopBound = false;
+                var isRightBottomBound = false;
                 var playerSize = Info.PlayerSize;
                 for (var index = 0; index < m_windows.Count; index++)
                 {
                     var window = m_windows[index];
-                    var isWithinLeftBound = targetPosition.x >= window.position.x;
-                    var isWithinRightBound = targetPosition.x + playerSize.x <= window.position.x + window.position.width;
-                    var isWithinTopBound = targetPosition.y >= window.position.y;
-                    var isWithinBottomBound = targetPosition.y + playerSize.y <= window.position.y + window.position.height;
-                    isInsideAnyWindow |= isWithinLeftBound && isWithinRightBound && isWithinTopBound && isWithinBottomBound;
+                    var windowRect = window.position;
+                    var leftTop = new Vector2(targetPosition.x, targetPosition.y);
+                    var rightTop = new Vector2(targetPosition.x + playerSize.x, targetPosition.y);
+                    var leftBottom = new Vector2(targetPosition.x, targetPosition.y + playerSize.y);
+                    var rightBottom = new Vector2(targetPosition.x + playerSize.x, targetPosition.y + playerSize.y);
+                    
+                    isLeftTopBound |= windowRect.Contains(leftTop);
+                    isLeftBottomBound |= windowRect.Contains(leftBottom);
+                    isRightTopBound |= windowRect.Contains(rightTop);
+                    isRightBottomBound |= windowRect.Contains(rightBottom);
                 }
 
-                if (isInsideAnyWindow)
+                var isWithinOneOrManyWindows = isLeftTopBound && isLeftBottomBound && isRightTopBound && isRightBottomBound;
+                if (isWithinOneOrManyWindows)
                 {
                     m_playerPosition = targetPosition;
                 }
+                
             }
             
             Tick();
