@@ -17,7 +17,7 @@ namespace EditorPlatformer.Editor
             var platformWindowName = $"Platform : {mainWindow.windowCount + 1}";
             var platformWindow = CreateWindow<PlatformWindow>(platformWindowName);
             platformWindow.minSize = Info.PlayerSize;
-            platformWindow.position = new Rect(0f, 0f, 200f, 200f);
+            platformWindow.position = new Rect(50f, 50f, 200f, 200f);
 
             mainWindow.Add(platformWindow);
         }
@@ -31,7 +31,7 @@ namespace EditorPlatformer.Editor
         public int windowCount => m_windows.Count;
         
         [SerializeField] private List<PlatformWindow> m_windows = new List<PlatformWindow>();
-        [SerializeField] private Vector2 m_playerPosition = new Vector2(30f, 100f);
+        [SerializeField] private Vector2 m_playerPosition = new Vector2(100f, 100f);
 
         private void Add(PlatformWindow window)
         {
@@ -47,21 +47,6 @@ namespace EditorPlatformer.Editor
             }
         }
 
-        private void Update()
-        {
-            var playerArgs = new PlayerArgs
-            {
-                center = m_playerPosition,
-                size = Info.PlayerSize
-            };
-            
-            for (var index = 0; index < m_windows.Count; index++)
-            {
-                var window = m_windows[index];
-                window.Tick(playerArgs);
-            }
-        }
-
         private void OnGUI()
         {
             Focus();
@@ -73,33 +58,55 @@ namespace EditorPlatformer.Editor
                 {
                     case KeyCode.W:
                     case KeyCode.UpArrow:
-                        targetPosition.y -= 10f;
+                        targetPosition.y -= Info.PLAYER_SPEED;
                         break;
                     case KeyCode.S:
                     case KeyCode.DownArrow:
-                        targetPosition.y += 10f;
+                        targetPosition.y += Info.PLAYER_SPEED;
                         break;
                     case KeyCode.A:
                     case KeyCode.LeftArrow:
-                        targetPosition.x -= 10f;
+                        targetPosition.x -= Info.PLAYER_SPEED;
                         break;
                     case KeyCode.D:
                     case KeyCode.RightArrow:
-                        targetPosition.x += 10f;
+                        targetPosition.x += Info.PLAYER_SPEED;
                         break;
                 }
 
                 var isInsideAnyWindow = false;
+                var playerSize = Info.PlayerSize;
                 for (var index = 0; index < m_windows.Count; index++)
                 {
                     var window = m_windows[index];
-                    isInsideAnyWindow |= window.position.Contains(targetPosition);
+                    var isWithinLeftBound = targetPosition.x >= window.position.x;
+                    var isWithinRightBound = targetPosition.x + playerSize.x <= window.position.x + window.position.width;
+                    var isWithinTopBound = targetPosition.y >= window.position.y;
+                    var isWithinBottomBound = targetPosition.y + playerSize.y <= window.position.y + window.position.height;
+                    isInsideAnyWindow |= isWithinLeftBound && isWithinRightBound && isWithinTopBound && isWithinBottomBound;
                 }
 
                 if (isInsideAnyWindow)
                 {
                     m_playerPosition = targetPosition;
                 }
+            }
+            
+            Tick();
+        }
+
+        private void Tick()
+        {
+            var playerArgs = new PlayerArgs
+            {
+                center = m_playerPosition,
+                size = Info.PlayerSize
+            };
+            
+            for (var index = 0; index < m_windows.Count; index++)
+            {
+                var window = m_windows[index];
+                window.Tick(playerArgs);
             }
         }
     }

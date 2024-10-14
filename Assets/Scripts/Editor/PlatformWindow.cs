@@ -24,9 +24,9 @@ namespace EditorPlatformer.Editor
             var windowPosition = position.position;
             var windowSize = position.size;
 
-            var playerRectInWindow = new Rect(playerRect.x - windowPosition.x, playerRect.y - windowPosition.y, playerRect.width, playerRect.height);
+            var playerRectInWindow = new Rect(playerCenter.x - windowPosition.x, playerCenter.y - windowPosition.y, playerRect.width, playerRect.height);
 
-            EditorGUI.DrawRect(playerRectInWindow, Color.red);
+            EditorGUI.DrawRect(playerRectInWindow, Info.PlayerColor);
 
             Repaint();
         }
