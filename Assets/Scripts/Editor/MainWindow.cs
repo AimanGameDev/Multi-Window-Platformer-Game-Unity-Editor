@@ -84,6 +84,8 @@ namespace EditorPlatformer.Editor
                 {
                     var window = m_windows[index];
                     var windowRect = window.position;
+                    windowRect.position = new Vector2(windowRect.position.x, windowRect.position.y - 18f);
+                    windowRect.size = new Vector2(windowRect.size.x, windowRect.size.y + 18f);
                     var leftTop = new Vector2(targetPosition.x, targetPosition.y);
                     var rightTop = new Vector2(targetPosition.x + playerSize.x, targetPosition.y);
                     var leftBottom = new Vector2(targetPosition.x, targetPosition.y + playerSize.y);
