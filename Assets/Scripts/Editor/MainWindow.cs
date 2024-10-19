@@ -130,8 +130,6 @@ namespace EditorPlatformer.Editor
             }
             
             var gravity = m_isGrounded ? 0f : Info.GRAVITY;
-            m_isGrounded = false;
-            
             currentPlayerPosition += (positionDiff * Info.FRICTION) + inputPosition + new Vector2(0f, gravity);
 
             CheckBounds(in currentPlayerPosition, out var boundsCollisionData);
@@ -185,7 +183,6 @@ namespace EditorPlatformer.Editor
                     var validRect = m_rects[validRectIndex];
                     currentPlayerPosition.y = validRect.position.y + validRect.size.y - Info.PlayerSize.y;
                     previousPlayerPosition.y = currentPlayerPosition.y;// + positionDiff.y;
-                    m_isGrounded = true;
                 }
 
                 m_previousPlayerPosition = previousPlayerPosition;
@@ -193,6 +190,10 @@ namespace EditorPlatformer.Editor
             }
             
             m_playerPosition = ClampPlayerPosition(m_playerPosition);
+
+            var groundedCheckPointBottomLeft = new Vector2(m_playerPosition.x, m_playerPosition.y + Info.PlayerSize.y);
+            var groundedCheckPointBottomRight = new Vector2(m_playerPosition.x + Info.PlayerSize.x, m_playerPosition.y + Info.PlayerSize.y);
+            m_isGrounded = !CheckIfPointIsWithinAnyRect(in groundedCheckPointBottomLeft) || !CheckIfPointIsWithinAnyRect(in groundedCheckPointBottomRight);
             
             var playerArgs = new PlayerArgs
             {
@@ -249,6 +250,18 @@ namespace EditorPlatformer.Editor
                     boundsCollisionData.bottomRightCollisionRectIndex = index;
                 }
             }
+        }
+
+        private bool CheckIfPointIsWithinAnyRect(in Vector2 point)
+        {
+            for (var i = 0; i < m_rects.Count; i++)
+            {
+                var rect = m_rects[i];
+                if (rect.Contains(point))
+                    return true;
+            }
+
+            return false;
         }
 
         private void LogInfo()
