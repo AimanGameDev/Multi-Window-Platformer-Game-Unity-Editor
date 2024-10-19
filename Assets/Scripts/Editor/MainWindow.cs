@@ -165,7 +165,7 @@ namespace EditorPlatformer.Editor
                     var validRectIndex = boundsCollisionData.topRightCollisionRectIndex != -1 ? boundsCollisionData.topRightCollisionRectIndex : boundsCollisionData.bottomRightCollisionRectIndex;
                     var validRect = m_rects[validRectIndex];
                     currentPlayerPosition.x = validRect.position.x;
-                    previousPlayerPosition.x = currentPlayerPosition.x;// + positionDiff.x;
+                    previousPlayerPosition.x = currentPlayerPosition.x;
                 }
                 
                 //Right
@@ -174,7 +174,7 @@ namespace EditorPlatformer.Editor
                     var validRectIndex = boundsCollisionData.topLeftCollisionRectIndex != -1 ? boundsCollisionData.topLeftCollisionRectIndex : boundsCollisionData.bottomLeftCollisionRectIndex;
                     var validRect = m_rects[validRectIndex];
                     currentPlayerPosition.x = validRect.position.x + validRect.size.x - Info.PlayerSize.x;
-                    previousPlayerPosition.x = currentPlayerPosition.x;// + positionDiff.x;
+                    previousPlayerPosition.x = currentPlayerPosition.x;
                 }
                 
                 //Top
@@ -183,7 +183,7 @@ namespace EditorPlatformer.Editor
                     var validRectIndex = boundsCollisionData.bottomLeftCollisionRectIndex != -1 ? boundsCollisionData.bottomLeftCollisionRectIndex : boundsCollisionData.bottomRightCollisionRectIndex;
                     var validRect = m_rects[validRectIndex];
                     currentPlayerPosition.y = validRect.position.y;
-                    previousPlayerPosition.y = currentPlayerPosition.y; // + positionDiff.y;
+                    previousPlayerPosition.y = currentPlayerPosition.y;
                 }
                 
                 //Bottom
@@ -192,7 +192,7 @@ namespace EditorPlatformer.Editor
                     var validRectIndex = boundsCollisionData.topLeftCollisionRectIndex != -1 ? boundsCollisionData.topLeftCollisionRectIndex : boundsCollisionData.topRightCollisionRectIndex;
                     var validRect = m_rects[validRectIndex];
                     currentPlayerPosition.y = validRect.position.y + validRect.size.y - Info.PlayerSize.y;
-                    previousPlayerPosition.y = currentPlayerPosition.y;// + positionDiff.y;
+                    previousPlayerPosition.y = currentPlayerPosition.y;
                 }
                 
                 var topLeftCollisionPoint = new Vector2(currentPlayerPosition.x - Info.STEP_UP_X_THRESHOLD, currentPlayerPosition.y);
@@ -226,6 +226,11 @@ namespace EditorPlatformer.Editor
             var groundedCheckPointBottomLeft = new Vector2(m_playerPosition.x, m_playerPosition.y + Info.PlayerSize.y);
             var groundedCheckPointBottomRight = new Vector2(m_playerPosition.x + Info.PlayerSize.x, m_playerPosition.y + Info.PlayerSize.y);
             m_isGrounded = !CheckIfPointIsWithinAnyRect(in groundedCheckPointBottomLeft) || !CheckIfPointIsWithinAnyRect(in groundedCheckPointBottomRight);
+            if (m_isGrounded)
+            {
+                m_playerPosition.y = m_previousPlayerPosition.y;
+            }
+            
             
             var playerArgs = new PlayerArgs
             {
