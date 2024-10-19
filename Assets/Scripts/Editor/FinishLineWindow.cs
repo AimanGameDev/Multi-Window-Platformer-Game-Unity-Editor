@@ -1,6 +1,6 @@
 namespace EditorPlatformer.Editor
 {
-    public class PlatformWindow : LevelWindow
+    public class FinishLineWindow : LevelWindow
     {
         
     }

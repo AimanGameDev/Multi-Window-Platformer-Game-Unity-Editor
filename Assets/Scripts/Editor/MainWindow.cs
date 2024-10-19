@@ -24,7 +24,7 @@ namespace EditorPlatformer.Editor
             mainWindow.Add(platformWindow);
         }
 
-        public static void RemoveWindow(PlatformWindow window)
+        public static void RemoveWindow(ILevelWindow window)
         {
             if (HasOpenInstances<MainWindow>())
             {
@@ -36,7 +36,7 @@ namespace EditorPlatformer.Editor
         public int windowCount => m_windows.Count;
 
         [SerializeField] 
-        private List<PlatformWindow> m_windows = new List<PlatformWindow>(16);
+        private List<ILevelWindow> m_windows = new List<ILevelWindow>(16);
         [SerializeField] 
         private List<Rect> m_rects = new List<Rect>(16);
         [SerializeField] 
@@ -46,7 +46,6 @@ namespace EditorPlatformer.Editor
 
         private Stopwatch m_stopwatch;
         private KeyCode m_lastPressedKey;
-        private bool m_isJumpKeyPressed;
         private bool m_isGrounded;
         private bool m_isShuttingDown;
 
@@ -56,12 +55,12 @@ namespace EditorPlatformer.Editor
             m_stopwatch.Start();
         }
 
-        private void Add(PlatformWindow window)
+        private void Add(ILevelWindow window)
         {
             m_windows.Add(window);
         }
 
-        private void Remove(PlatformWindow window)
+        private void Remove(ILevelWindow window)
         {
             m_windows.Remove(window);
             if (m_windows.Count == 0 && !m_isShuttingDown)
@@ -81,8 +80,6 @@ namespace EditorPlatformer.Editor
                 m_lastPressedKey = Event.current.keyCode;
             }
 
-            m_isJumpKeyPressed = Event.current.shift;
-            
             if(m_stopwatch.ElapsedMilliseconds < Info.TICK_RATE_MILLISECONDS)
                 return;
 
@@ -106,10 +103,11 @@ namespace EditorPlatformer.Editor
             var inputPosition = Vector2.zero;
             switch (m_lastPressedKey)
             {
-                // case KeyCode.W:
-                // case KeyCode.UpArrow:
-                //     inputPosition.y -= Info.PLAYER_JUMP_FORCE;
-                //     break;
+                case KeyCode.W:
+                case KeyCode.UpArrow:
+                    if(m_isGrounded)
+                        inputPosition.y -= Info.PLAYER_JUMP_FORCE;
+                    break;
                 // case KeyCode.S:
                 // case KeyCode.DownArrow:
                 //     targetPosition.y += Info.PLAYER_SPEED;
@@ -122,11 +120,6 @@ namespace EditorPlatformer.Editor
                 case KeyCode.RightArrow:
                     inputPosition.x += Info.PLAYER_SPEED;
                     break;
-            }
-
-            if (m_isJumpKeyPressed && m_isGrounded)
-            {
-                inputPosition.y -= Info.PLAYER_JUMP_FORCE;
             }
             
             var gravity = m_isGrounded ? 0f : Info.GRAVITY;

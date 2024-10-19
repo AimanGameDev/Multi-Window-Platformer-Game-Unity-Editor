@@ -1,14 +1,15 @@
+using System;
 using UnityEngine;
 
 namespace EditorPlatformer.Editor
 {
-    public struct Info
+    public readonly struct Info
     {
         public const long TICK_RATE_MILLISECONDS = 10;
         
         public const float SIMULATION_SPEED = 1f;
         public const float PLAYER_SPEED = 1f * SIMULATION_SPEED;
-        public const float PLAYER_JUMP_FORCE = 4f * SIMULATION_SPEED;
+        public const float PLAYER_JUMP_FORCE = 12f * SIMULATION_SPEED;
         public const float GRAVITY = 0.3f * SIMULATION_SPEED;
         public const float FRICTION = 0.95f;
         public const float STEP_UP_X_THRESHOLD = 3f;
@@ -19,6 +20,7 @@ namespace EditorPlatformer.Editor
         public static readonly Color PlayerColor = new Color(1f, 0f, 0f, 0.5f);
     }
 
+    [Serializable]
     public struct PlayerArgs
     {
         public Vector2 center;
