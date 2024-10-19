@@ -10,18 +10,35 @@ namespace EditorPlatformer.Editor
     [DefaultExecutionOrder(-1)]
     public class MainWindow : EditorWindow
     {
-        [MenuItem("Window Platformer/Play %w")]
-        public static void ShowWindow()
+        [MenuItem("Window Platformer/Spawn Platform Window %q")]
+        public static void SpawnPlatformWindow()
+        {
+            SpawnWindow<PlatformWindow>();
+        }
+        
+        [MenuItem("Window Platformer/Spawn Coin Window %w")]
+        public static void SpawnCoinWindow()
+        {
+            SpawnWindow<CoinWindow>();
+        }
+        
+        [MenuItem("Window Platformer/Spawn JumpPad Window %e")]
+        public static void SpawnJumpPadWindow()
+        {
+            SpawnWindow<JumpPadWindow>();
+        }
+
+        private static void SpawnWindow<T>() where T : LevelWindow, ILevelWindow
         {
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.position = new Rect(100f, 10f, 400f, 200f);
             
-            var platformWindowName = $"Platform : {mainWindow.windowCount + 1}";
-            var platformWindow = CreateWindow<PlatformWindow>(platformWindowName);
-            platformWindow.minSize = Info.PlayerSize;
-            platformWindow.position = new Rect(300f, 300f, 200f, 200f);
+            var levelWindowName = $"Platform : {mainWindow.windowCount + 1}";
+            var levelWindow = CreateWindow<T>(levelWindowName);
+            levelWindow.minSize = Info.PlayerSize;
+            levelWindow.position = new Rect(300f, 300f, 200f, 200f);
 
-            mainWindow.Add(platformWindow);
+            mainWindow.Add(levelWindow);
         }
 
         public static void RemoveWindow(ILevelWindow window)
@@ -206,8 +223,6 @@ namespace EditorPlatformer.Editor
                 m_playerPosition = currentPlayerPosition;
             }
             
-            m_playerPosition = ClampPlayerPosition(m_playerPosition);
-
             var groundedCheckPointBottomLeft = new Vector2(m_playerPosition.x, m_playerPosition.y + Info.PlayerSize.y);
             var groundedCheckPointBottomRight = new Vector2(m_playerPosition.x + Info.PlayerSize.x, m_playerPosition.y + Info.PlayerSize.y);
             m_isGrounded = !CheckIfPointIsWithinAnyRect(in groundedCheckPointBottomLeft) || !CheckIfPointIsWithinAnyRect(in groundedCheckPointBottomRight);
@@ -288,13 +303,6 @@ namespace EditorPlatformer.Editor
             EditorGUILayout.LabelField("Is Grounded", m_isGrounded.ToString());
             EditorGUILayout.LabelField("Last Key Pressed", m_lastPressedKey.ToString());
             EditorGUILayout.LabelField("Key Pressed", Event.current.keyCode.ToString());
-        }
-
-        private Vector2 ClampPlayerPosition(Vector2 playerPosition)
-        {
-            playerPosition.x = Mathf.Clamp(playerPosition.x, 0f, Screen.currentResolution.width - Info.PlayerSize.x);
-            playerPosition.y = Mathf.Clamp(playerPosition.y, 0f, Screen.currentResolution.height - Info.PlayerSize.y);
-            return playerPosition;
         }
 
         private void OnDestroy()
