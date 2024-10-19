@@ -14,12 +14,12 @@ namespace EditorPlatformer.Editor
     {
         [SerializeField] private PlayerArgs m_playerArgs;
 
-        public void Tick(PlayerArgs args)
+        public virtual void Tick(PlayerArgs args)
         {
             m_playerArgs = args;
         }
 
-        public void OnGUI()
+        protected virtual void OnGUI()
         {
             var playerCenter = m_playerArgs.center;
             var playerSize = m_playerArgs.size;
@@ -34,7 +34,7 @@ namespace EditorPlatformer.Editor
             Repaint();
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             MainWindow.RemoveWindow(this);
         }

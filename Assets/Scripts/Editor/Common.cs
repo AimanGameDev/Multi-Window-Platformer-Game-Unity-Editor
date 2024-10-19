@@ -15,9 +15,12 @@ namespace EditorPlatformer.Editor
         public const float STEP_UP_X_THRESHOLD = 3f;
         public const float STEP_UP_Y_THRESHOLD = 4f;
         
+        public const float COIN_SIZE = 20f;
+        
         public static readonly Vector2 InitPosition = new Vector2(350f, 350f);
         public static readonly Vector2 PlayerSize = new Vector2(50f, 50f);
         public static readonly Color PlayerColor = new Color(1f, 0f, 0f, 0.5f);
+        public static readonly Color CoinColor = new Color(0.81f, 0.73f, 0f, 0.85f);
     }
 
     [Serializable]

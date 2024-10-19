@@ -13,27 +13,27 @@ namespace EditorPlatformer.Editor
         [MenuItem("Window Platformer/Spawn Platform Window %q")]
         public static void SpawnPlatformWindow()
         {
-            SpawnWindow<PlatformWindow>();
+            SpawnWindow<PlatformWindow>("Platform Window");
         }
         
         [MenuItem("Window Platformer/Spawn Coin Window %w")]
         public static void SpawnCoinWindow()
         {
-            SpawnWindow<CoinWindow>();
+            SpawnWindow<CoinWindow>("Coin Window");
         }
         
         [MenuItem("Window Platformer/Spawn JumpPad Window %e")]
         public static void SpawnJumpPadWindow()
         {
-            SpawnWindow<JumpPadWindow>();
+            SpawnWindow<JumpPadWindow>("JumpPad Window");
         }
 
-        private static void SpawnWindow<T>() where T : LevelWindow, ILevelWindow
+        private static void SpawnWindow<T>(string windowNamePrefix) where T : LevelWindow, ILevelWindow
         {
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.position = new Rect(100f, 10f, 400f, 200f);
             
-            var levelWindowName = $"Platform : {mainWindow.windowCount + 1}";
+            var levelWindowName = $"{windowNamePrefix} : {mainWindow.windowCount + 1}";
             var levelWindow = CreateWindow<T>(levelWindowName);
             levelWindow.minSize = Info.PlayerSize;
             levelWindow.position = new Rect(300f, 300f, 200f, 200f);
