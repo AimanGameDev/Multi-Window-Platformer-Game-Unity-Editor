@@ -19,9 +19,8 @@ namespace EditorPlatformer.Editor
             var playerRect = new Rect(playerCenter.x - playerSize.x / 2, playerCenter.y - playerSize.y / 2, playerSize.x, playerSize.y);
 
             var windowPosition = position.position;
-            var windowSize = position.size;
 
-            var playerRectInWindow = new Rect(playerCenter.x - windowPosition.x, playerCenter.y - windowPosition.y, playerRect.width, playerRect.height);
+            var playerRectInWindow = new Rect(playerRect.position.x - windowPosition.x, playerRect.position.y - windowPosition.y, playerRect.width, playerRect.height);
 
             EditorGUI.DrawRect(playerRectInWindow, Info.PlayerColor);
 
