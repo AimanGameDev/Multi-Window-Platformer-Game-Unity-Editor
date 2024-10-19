@@ -4,12 +4,15 @@ namespace EditorPlatformer.Editor
 {
     public struct Info
     {
+        public const long TICK_RATE_MILLISECONDS = 10;
+        
         public const float SIMULATION_SPEED = 1f;
         public const float PLAYER_SPEED = 1f * SIMULATION_SPEED;
         public const float PLAYER_JUMP_FORCE = 4f * SIMULATION_SPEED;
-        public const float GRAVITY = 0.1f * SIMULATION_SPEED;
+        public const float GRAVITY = 0.3f * SIMULATION_SPEED;
         public const float FRICTION = 0.95f;
-        public const long TICK_RATE_MILLISECONDS = 10;
+        public const float STEP_UP_X_THRESHOLD = 3f;
+        public const float STEP_UP_Y_THRESHOLD = 4f;
         
         public static readonly Vector2 InitPosition = new Vector2(350f, 350f);
         public static readonly Vector2 PlayerSize = new Vector2(50f, 50f);

@@ -184,7 +184,31 @@ namespace EditorPlatformer.Editor
                     currentPlayerPosition.y = validRect.position.y + validRect.size.y - Info.PlayerSize.y;
                     previousPlayerPosition.y = currentPlayerPosition.y;// + positionDiff.y;
                 }
+                
+                var topLeftCollisionPoint = new Vector2(currentPlayerPosition.x - Info.STEP_UP_X_THRESHOLD, currentPlayerPosition.y);
+                var bottomLeftCollisionPoint = new Vector2(currentPlayerPosition.x - Info.STEP_UP_X_THRESHOLD, currentPlayerPosition.y + Info.PlayerSize.y - Info.STEP_UP_Y_THRESHOLD);
+                var topRightCollisionPoint = new Vector2(currentPlayerPosition.x + Info.PlayerSize.x + Info.STEP_UP_X_THRESHOLD, currentPlayerPosition.y);
+                var bottomRightCollisionPoint = new Vector2(currentPlayerPosition.x + Info.PlayerSize.x + Info.STEP_UP_X_THRESHOLD, currentPlayerPosition.y + Info.PlayerSize.y - Info.STEP_UP_Y_THRESHOLD);
 
+                var canMoveLeft = CheckIfPointIsWithinAnyRect(topLeftCollisionPoint) && CheckIfPointIsWithinAnyRect(bottomLeftCollisionPoint);
+                var canMoveRight = CheckIfPointIsWithinAnyRect(topRightCollisionPoint) && CheckIfPointIsWithinAnyRect(bottomRightCollisionPoint);
+
+                if (!canMoveLeft)
+                {
+                    if(currentPlayerPosition.x < previousPlayerPosition.x)
+                    {
+                        currentPlayerPosition.x = previousPlayerPosition.x;
+                    }
+                }
+
+                if (!canMoveRight)
+                {
+                    if (currentPlayerPosition.x > previousPlayerPosition.x)
+                    {
+                        currentPlayerPosition.x = previousPlayerPosition.x;
+                    }
+                }
+                
                 m_previousPlayerPosition = previousPlayerPosition;
                 m_playerPosition = currentPlayerPosition;
             }
