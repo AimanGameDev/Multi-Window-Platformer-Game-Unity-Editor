@@ -27,7 +27,9 @@ namespace EditorPlatformer.Editor
         [MenuItem("Window Platformer/Spawn JumpPad Window %e")]
         public static void SpawnJumpPadWindow()
         {
-            SpawnWindow<JumpPadWindow>("JumpPad Window");
+            var jumpPadWindow = SpawnWindow<JumpPadWindow>("JumpPad Window");
+            var mainWindow = GetWindow<MainWindow>();
+            mainWindow.Add(jumpPadWindow);
         }
 
         private static T SpawnWindow<T>(string windowNamePrefix) where T : LevelWindow, ILevelWindow
@@ -61,6 +63,8 @@ namespace EditorPlatformer.Editor
         [SerializeField] 
         private List<CoinWindow> m_coinWindows = new List<CoinWindow>(16);
         [SerializeField] 
+        private List<JumpPadWindow> m_jumpPadWindows = new List<JumpPadWindow>(16);
+        [SerializeField] 
         private List<Rect> m_rects = new List<Rect>(16);
         [SerializeField] 
         private Vector2 m_playerPosition = Info.InitPosition;
@@ -68,6 +72,8 @@ namespace EditorPlatformer.Editor
         private Vector2 m_previousPlayerPosition = Info.InitPosition;
 
         private Stopwatch m_stopwatch;
+        [SerializeField] 
+        private int m_ticks;
         [SerializeField]
         private KeyCode m_lastPressedKey;
         [SerializeField]
@@ -81,6 +87,7 @@ namespace EditorPlatformer.Editor
         {
             m_stopwatch = new Stopwatch();
             m_stopwatch.Start();
+            m_ticks = 0;
             m_points = 0;
         }
 
@@ -101,6 +108,11 @@ namespace EditorPlatformer.Editor
         private void Add(CoinWindow window)
         {
             m_coinWindows.Add(window);
+        }
+        
+        private void Add(JumpPadWindow window)
+        {
+            m_jumpPadWindows.Add(window);
         }
 
         private void OnGUI()
@@ -128,6 +140,7 @@ namespace EditorPlatformer.Editor
 
         private void Tick()
         {
+            m_ticks = (m_ticks + 1) % 100000;
             RecalculateRects();
             
             var currentPlayerPosition = m_playerPosition;
@@ -247,6 +260,15 @@ namespace EditorPlatformer.Editor
             {
                 m_playerPosition.y = m_previousPlayerPosition.y;
             }
+            
+            for (var i = 0; i < m_jumpPadWindows.Count; i++)
+            {
+                var jumpPadWindow = m_jumpPadWindows[i];
+                if (jumpPadWindow.isPlayerOnJumpPad)
+                {
+                    m_previousPlayerPosition.y += Info.JUMP_PAD_FORCE;
+                }
+            }
 
             for (var i = m_coinWindows.Count - 1; i >= 0; i--)
             {
@@ -260,6 +282,7 @@ namespace EditorPlatformer.Editor
 
             var playerArgs = new PlayerArgs
             {
+                time = m_ticks,
                 center = new Vector2(m_playerPosition.x + Info.PlayerSize.x / 2, m_playerPosition.y + Info.PlayerSize.y / 2),
                 size = Info.PlayerSize
             };

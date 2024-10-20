@@ -9,7 +9,9 @@ namespace EditorPlatformer.Editor
         private bool m_isCollected;
         
         [SerializeField]
-        private Rect m_coinRect;
+        private Rect m_coinCollisionRect;
+        [SerializeField]
+        private Rect m_coinViewRect;
 
         public bool isCollected => m_isCollected;
 
@@ -19,14 +21,17 @@ namespace EditorPlatformer.Editor
             
             var windowRect = this.position;
             var centerX = windowRect.width * 0.5f;
-            var centerY = windowRect.height - Info.COIN_SIZE;
-            var coinRect = new Rect(centerX - Info.COIN_SIZE * 0.5f, centerY - Info.COIN_SIZE * 0.5f, Info.COIN_SIZE, Info.COIN_SIZE);
-            m_coinRect = coinRect;
+            var centerY = windowRect.height - Info.COIN_COLLISION_BOUNDS_SIZE;
+            var coinRect = new Rect(centerX - Info.COIN_COLLISION_BOUNDS_SIZE * 0.5f, centerY - Info.COIN_COLLISION_BOUNDS_SIZE * 0.5f, Info.COIN_COLLISION_BOUNDS_SIZE, Info.COIN_COLLISION_BOUNDS_SIZE);
+            m_coinCollisionRect = coinRect;
             
-            if (coinRect.Overlaps(m_playerRectInWindow))
+            if (m_coinCollisionRect.Overlaps(m_playerRectInWindow))
             {
                 m_isCollected = true;
             }
+
+            var coinRectSizeX = (Info.COIN_COLLISION_BOUNDS_SIZE * 0.1f) + (coinRect.size.x * Mathf.Sin(args.time * 0.05f));
+            m_coinViewRect = new Rect(coinRect.position.x - coinRectSizeX * 0.5f, coinRect.position.y, coinRectSizeX, coinRect.size.y);
         }
         
         protected override void OnGUI()
@@ -35,7 +40,7 @@ namespace EditorPlatformer.Editor
 
             if (!m_isCollected)
             {
-                EditorGUI.DrawRect(m_coinRect, Info.CoinColor);
+                EditorGUI.DrawRect(m_coinViewRect, Info.CoinColor);
             }
         }
     }
