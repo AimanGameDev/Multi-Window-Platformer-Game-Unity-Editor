@@ -12,6 +12,12 @@ namespace EditorPlatformer.Editor
         [MenuItem("Editor Platformer/Play", false, 100)]
         public static void Play()
         {
+            if (HasOpenInstances<MainWindow>())
+                GetWindow<MainWindow>().CloseAll();
+
+            while (HasOpenInstances<PlatformWindow>())
+                GetWindow<LevelWindow>().Close();
+
             var editorApplicationRect = EditorGUIUtility.GetMainWindowPosition();
             var firstPlatformWindowSize = Info.PlayerSize * 3f;
             Info.InitPlayerPosition = new Vector2(firstPlatformWindowSize.x * 0.5f, editorApplicationRect.height - firstPlatformWindowSize.y * 0.5f);
@@ -142,7 +148,7 @@ namespace EditorPlatformer.Editor
             m_finishLineWindow = window;
         }
 
-        private void Restart()
+        private void CloseAll()
         {
             for (var i = m_windows.Count - 1; i >= 0; i--)
             {
@@ -150,6 +156,11 @@ namespace EditorPlatformer.Editor
             }
             
             Close();
+        }
+
+        private void Restart()
+        {
+            CloseAll();
             Play();
         }
 
