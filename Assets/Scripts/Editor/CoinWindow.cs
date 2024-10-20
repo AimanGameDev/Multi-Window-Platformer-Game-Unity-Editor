@@ -30,8 +30,8 @@ namespace EditorPlatformer.Editor
                 m_isCollected = true;
             }
 
-            var coinRectSizeX = (Info.COIN_COLLISION_BOUNDS_SIZE * 0.1f) + (coinRect.size.x * Mathf.Sin(args.time * 0.05f));
-            m_coinViewRect = new Rect(coinRect.position.x - coinRectSizeX * 0.5f, coinRect.position.y, coinRectSizeX, coinRect.size.y);
+            var coinRectSizeX = (Info.COIN_COLLISION_BOUNDS_SIZE * 0.1f) + (coinRect.size.x * (Mathf.Sin(args.time * 0.05f) + 1f) * 0.5f);
+            m_coinViewRect = new Rect(coinRect.position.x + Info.COIN_COLLISION_BOUNDS_SIZE * 0.5f - coinRectSizeX * 0.5f, coinRect.position.y, coinRectSizeX, coinRect.size.y);
         }
         
         protected override void OnGUI()
