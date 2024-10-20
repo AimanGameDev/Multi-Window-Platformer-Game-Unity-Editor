@@ -31,6 +31,14 @@ namespace EditorPlatformer.Editor
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.Add(jumpPadWindow);
         }
+        
+        [MenuItem("Window Platformer/Spawn FinishLine Window")]
+        public static void SpawnFinishLineWindow()
+        {
+            var finishLineWindow = SpawnWindow<FinishLineWindow>("Finish Line Window");
+            var mainWindow = GetWindow<MainWindow>();
+            mainWindow.Add(finishLineWindow);
+        }
 
         private static T SpawnWindow<T>(string windowNamePrefix) where T : LevelWindow, ILevelWindow
         {
@@ -64,6 +72,8 @@ namespace EditorPlatformer.Editor
         private List<CoinWindow> m_coinWindows = new List<CoinWindow>(16);
         [SerializeField] 
         private List<JumpPadWindow> m_jumpPadWindows = new List<JumpPadWindow>(16);
+        [SerializeField]
+        private FinishLineWindow m_finishLineWindow;
         [SerializeField] 
         private List<Rect> m_rects = new List<Rect>(16);
         [SerializeField] 
@@ -113,6 +123,11 @@ namespace EditorPlatformer.Editor
         private void Add(JumpPadWindow window)
         {
             m_jumpPadWindows.Add(window);
+        }
+
+        private void Add(FinishLineWindow window)
+        {
+            m_finishLineWindow = window;
         }
 
         private void OnGUI()
@@ -278,6 +293,11 @@ namespace EditorPlatformer.Editor
                     m_points++;
                     m_coinWindows.RemoveAt(i);
                 }
+            }
+
+            if (m_finishLineWindow != null && m_finishLineWindow.isInFinishLine)
+            {
+                Debug.Log("GG");
             }
 
             var playerArgs = new PlayerArgs

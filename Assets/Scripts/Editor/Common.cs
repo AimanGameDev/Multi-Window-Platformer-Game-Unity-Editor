@@ -19,7 +19,9 @@ namespace EditorPlatformer.Editor
         
         public const float COIN_COLLISION_BOUNDS_SIZE = 20f;
         public const float JUMP_PAD_COLLISION_BOUNDS_HEIGHT = 30f;
-        
+        public const float FINISH_LINE_COLLISION_BOUNDS_SIZE = 50f;
+        public const int FINISH_LINE_VIEW_CHECK_COUNT = 4;
+
         public static readonly Vector2 InitPosition = new Vector2(350f, 350f);
         public static readonly Vector2 PlayerSize = new Vector2(50f, 50f);
         public static readonly Color PlayerColor = new Color(1f, 0f, 0f, 0.5f);
