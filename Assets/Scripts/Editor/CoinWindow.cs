@@ -11,6 +11,8 @@ namespace EditorPlatformer.Editor
         [SerializeField]
         private Rect m_coinRect;
 
+        public bool isCollected => m_isCollected;
+
         public override void Tick(PlayerArgs args)
         {
             base.Tick(args);

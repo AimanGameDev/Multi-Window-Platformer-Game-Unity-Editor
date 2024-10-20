@@ -19,7 +19,9 @@ namespace EditorPlatformer.Editor
         [MenuItem("Window Platformer/Spawn Coin Window %w")]
         public static void SpawnCoinWindow()
         {
-            SpawnWindow<CoinWindow>("Coin Window");
+            var coinWindow = SpawnWindow<CoinWindow>("Coin Window");
+            var mainWindow = GetWindow<MainWindow>();
+            mainWindow.Add(coinWindow);
         }
         
         [MenuItem("Window Platformer/Spawn JumpPad Window %e")]
@@ -28,7 +30,7 @@ namespace EditorPlatformer.Editor
             SpawnWindow<JumpPadWindow>("JumpPad Window");
         }
 
-        private static void SpawnWindow<T>(string windowNamePrefix) where T : LevelWindow, ILevelWindow
+        private static T SpawnWindow<T>(string windowNamePrefix) where T : LevelWindow, ILevelWindow
         {
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.position = new Rect(100f, 10f, 400f, 200f);
@@ -39,6 +41,8 @@ namespace EditorPlatformer.Editor
             levelWindow.position = new Rect(300f, 300f, 200f, 200f);
 
             mainWindow.Add(levelWindow);
+
+            return levelWindow;
         }
 
         public static void RemoveWindow(ILevelWindow window)
@@ -55,6 +59,8 @@ namespace EditorPlatformer.Editor
         [SerializeField] 
         private List<ILevelWindow> m_windows = new List<ILevelWindow>(16);
         [SerializeField] 
+        private List<CoinWindow> m_coinWindows = new List<CoinWindow>(16);
+        [SerializeField] 
         private List<Rect> m_rects = new List<Rect>(16);
         [SerializeField] 
         private Vector2 m_playerPosition = Info.InitPosition;
@@ -62,14 +68,20 @@ namespace EditorPlatformer.Editor
         private Vector2 m_previousPlayerPosition = Info.InitPosition;
 
         private Stopwatch m_stopwatch;
+        [SerializeField]
         private KeyCode m_lastPressedKey;
+        [SerializeField]
         private bool m_isGrounded;
+        [SerializeField]
         private bool m_isShuttingDown;
+        [SerializeField] 
+        private int m_points;
 
         private void OnEnable()
         {
             m_stopwatch = new Stopwatch();
             m_stopwatch.Start();
+            m_points = 0;
         }
 
         private void Add(ILevelWindow window)
@@ -84,6 +96,11 @@ namespace EditorPlatformer.Editor
             {
                 Close();
             }
+        }
+        
+        private void Add(CoinWindow window)
+        {
+            m_coinWindows.Add(window);
         }
 
         private void OnGUI()
@@ -230,8 +247,17 @@ namespace EditorPlatformer.Editor
             {
                 m_playerPosition.y = m_previousPlayerPosition.y;
             }
-            
-            
+
+            for (var i = m_coinWindows.Count - 1; i >= 0; i--)
+            {
+                var coinWindow = m_coinWindows[i];
+                if (coinWindow.isCollected)
+                {
+                    m_points++;
+                    m_coinWindows.RemoveAt(i);
+                }
+            }
+
             var playerArgs = new PlayerArgs
             {
                 center = new Vector2(m_playerPosition.x + Info.PlayerSize.x / 2, m_playerPosition.y + Info.PlayerSize.y / 2),
@@ -308,6 +334,7 @@ namespace EditorPlatformer.Editor
             EditorGUILayout.LabelField("Is Grounded", m_isGrounded.ToString());
             EditorGUILayout.LabelField("Last Key Pressed", m_lastPressedKey.ToString());
             EditorGUILayout.LabelField("Key Pressed", Event.current.keyCode.ToString());
+            EditorGUILayout.LabelField("Points", m_points.ToString());
         }
 
         private void OnDestroy()
