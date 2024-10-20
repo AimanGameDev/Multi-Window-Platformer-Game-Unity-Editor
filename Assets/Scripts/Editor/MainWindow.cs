@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor;
@@ -18,7 +17,7 @@ namespace EditorPlatformer.Editor
             Info.InitPlayerPosition = new Vector2(firstPlatformWindowSize.x * 0.5f, editorApplicationRect.height - firstPlatformWindowSize.y * 0.5f);
 
             var mainWindow = GetWindow<MainWindow>(Info.WindowNames.EDITOR_PLATFORMER);
-            var mainWindowSize = new Vector2(350f, 50f);
+            var mainWindowSize = new Vector2(350f, 160f);
             mainWindow.minSize = mainWindowSize;
             mainWindow.maxSize = mainWindowSize;
             mainWindow.position = new Rect(new Vector2(0, 50f), mainWindowSize);
@@ -78,8 +77,6 @@ namespace EditorPlatformer.Editor
                 mainWindow.Remove(window);
             }
         }
-
-        public int windowCount => m_windows.Count;
 
         [SerializeField] 
         private List<ILevelWindow> m_windows = new List<ILevelWindow>(16);
@@ -143,6 +140,17 @@ namespace EditorPlatformer.Editor
         private void Add(FinishLineWindow window)
         {
             m_finishLineWindow = window;
+        }
+
+        private void Restart()
+        {
+            for (var i = m_windows.Count - 1; i >= 0; i--)
+            {
+                m_windows[i].Close();
+            }
+            
+            Close();
+            Play();
         }
 
         private void OnGUI()
@@ -387,9 +395,18 @@ namespace EditorPlatformer.Editor
 
         private void DisplayInfo()
         {
-            EditorGUILayout.LabelField(string.Empty, "Welcome to the Multi Editor-Window Platformer Game!");
+            GUILayout.Label("Welcome to the Multi Editor-Window Platformer Game!");
+            EditorGUILayout.Space();
+            GUILayout.Label("Controls:");
+            GUILayout.Label("Up Arrow - Jump");
+            GUILayout.Label("Left Arrow - Move Left");
+            GUILayout.Label("Right Arrow - Move Right");
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Points", m_points.ToString());
+            if (GUILayout.Button("Restart"))
+            {
+                Restart();
+            }
         }
 
         private void OnDestroy()
