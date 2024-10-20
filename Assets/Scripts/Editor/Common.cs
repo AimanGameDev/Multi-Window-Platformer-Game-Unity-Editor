@@ -12,6 +12,7 @@ namespace EditorPlatformer.Editor
         public const float PLAYER_JUMP_FORCE = 12f * SIMULATION_SPEED;
         public const float GRAVITY = 0.3f * SIMULATION_SPEED;
         public const float FRICTION = 0.95f;
+        public const float COLLISION_SPEED_MULTIPLIER = 0.8f;
         public const float STEP_UP_X_THRESHOLD = 3f;
         public const float STEP_UP_Y_THRESHOLD = 4f;
         
