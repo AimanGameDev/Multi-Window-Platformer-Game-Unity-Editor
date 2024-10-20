@@ -22,11 +22,20 @@ namespace EditorPlatformer.Editor
         public const float FINISH_LINE_COLLISION_BOUNDS_SIZE = 50f;
         public const int FINISH_LINE_VIEW_CHECK_COUNT = 4;
 
-        public static readonly Vector2 InitPosition = new Vector2(350f, 350f);
+        public static Vector2 InitPlayerPosition = new Vector2(350f, 350f );
         public static readonly Vector2 PlayerSize = new Vector2(50f, 50f);
         public static readonly Color PlayerColor = new Color(1f, 0f, 0f, 0.5f);
         public static readonly Color CoinColor = new Color(0.81f, 0.73f, 0f, 0.85f);
         public static readonly Color JumpPadColor = new Color(0f, 0.81f, 0.81f, 0.85f);
+
+        public readonly struct WindowNames
+        {
+            public const string EDITOR_PLATFORMER = "Editor Platformer";
+            public const string PLATFORM = "Platform";
+            public const string COIN = "Coin";
+            public const string FINISH_LINE = "Finish Line";
+            public const string JUMP_PAD = "Jump Pad";
+        }
     }
 
     [Serializable]

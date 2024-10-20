@@ -10,42 +10,57 @@ namespace EditorPlatformer.Editor
     [DefaultExecutionOrder(-1)]
     public class MainWindow : EditorWindow
     {
-        [MenuItem("Window Platformer/Spawn Platform Window %q")]
-        public static void SpawnPlatformWindow()
+        [MenuItem("Editor Platformer/Play", false, 100)]
+        public static void Play()
         {
-            SpawnWindow<PlatformWindow>("Platform Window");
+            var editorApplicationRect = EditorGUIUtility.GetMainWindowPosition();
+            var firstPlatformWindowSize = Info.PlayerSize * 3f;
+            Info.InitPlayerPosition = new Vector2(firstPlatformWindowSize.x * 0.5f, editorApplicationRect.height - firstPlatformWindowSize.y * 0.5f);
+
+            var mainWindow = GetWindow<MainWindow>(Info.WindowNames.EDITOR_PLATFORMER);
+            var mainWindowSize = new Vector2(350f, 50f);
+            mainWindow.minSize = mainWindowSize;
+            mainWindow.maxSize = mainWindowSize;
+            mainWindow.position = new Rect(new Vector2(0, 50f), mainWindowSize);
+            
+            var firstPlatformWindow = SpawnWindow<PlatformWindow>(Info.WindowNames.PLATFORM);
+            firstPlatformWindow.position = new Rect(new Vector2(0f, editorApplicationRect.height - firstPlatformWindowSize.y), firstPlatformWindowSize);
+            
+            var finishLineWindow = SpawnWindow<FinishLineWindow>(Info.WindowNames.FINISH_LINE);
+            mainWindow.Add(finishLineWindow);
+            var finishLineWindowSize = Info.FINISH_LINE_COLLISION_BOUNDS_SIZE * 2f;
+            finishLineWindow.minSize = new Vector2(finishLineWindowSize, finishLineWindowSize);
+            finishLineWindow.maxSize = new Vector2(finishLineWindowSize, finishLineWindowSize);
+            finishLineWindow.position = new Rect(editorApplicationRect.width - finishLineWindowSize, 0f, finishLineWindowSize, finishLineWindowSize); 
         }
         
-        [MenuItem("Window Platformer/Spawn Coin Window %w")]
+        [MenuItem("Editor Platformer/Spawn Platform Window %q")]
+        public static void SpawnPlatformWindow()
+        {
+            SpawnWindow<PlatformWindow>(Info.WindowNames.PLATFORM);
+        }
+        
+        [MenuItem("Editor Platformer/Spawn Coin Window %w")]
         public static void SpawnCoinWindow()
         {
-            var coinWindow = SpawnWindow<CoinWindow>("Coin Window");
+            var coinWindow = SpawnWindow<CoinWindow>(Info.WindowNames.COIN);
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.Add(coinWindow);
         }
-        
-        [MenuItem("Window Platformer/Spawn JumpPad Window %e")]
+
+        [MenuItem("Editor Platformer/Spawn JumpPad Window %e")]
         public static void SpawnJumpPadWindow()
         {
-            var jumpPadWindow = SpawnWindow<JumpPadWindow>("JumpPad Window");
+            var jumpPadWindow = SpawnWindow<JumpPadWindow>(Info.WindowNames.JUMP_PAD);
             var mainWindow = GetWindow<MainWindow>();
             mainWindow.Add(jumpPadWindow);
-        }
-        
-        [MenuItem("Window Platformer/Spawn FinishLine Window")]
-        public static void SpawnFinishLineWindow()
-        {
-            var finishLineWindow = SpawnWindow<FinishLineWindow>("Finish Line Window");
-            var mainWindow = GetWindow<MainWindow>();
-            mainWindow.Add(finishLineWindow);
         }
 
         private static T SpawnWindow<T>(string windowNamePrefix) where T : LevelWindow, ILevelWindow
         {
             var mainWindow = GetWindow<MainWindow>();
-            mainWindow.position = new Rect(100f, 10f, 400f, 200f);
             
-            var levelWindowName = $"{windowNamePrefix} : {mainWindow.windowCount + 1}";
+            var levelWindowName = windowNamePrefix;
             var levelWindow = CreateWindow<T>(levelWindowName);
             levelWindow.minSize = Info.PlayerSize;
             levelWindow.position = new Rect(300f, 300f, 200f, 200f);
@@ -77,9 +92,9 @@ namespace EditorPlatformer.Editor
         [SerializeField] 
         private List<Rect> m_rects = new List<Rect>(16);
         [SerializeField] 
-        private Vector2 m_playerPosition = Info.InitPosition;
+        private Vector2 m_playerPosition = Info.InitPlayerPosition;
         [SerializeField] 
-        private Vector2 m_previousPlayerPosition = Info.InitPosition;
+        private Vector2 m_previousPlayerPosition = Info.InitPlayerPosition;
 
         private Stopwatch m_stopwatch;
         [SerializeField] 
@@ -132,7 +147,7 @@ namespace EditorPlatformer.Editor
 
         private void OnGUI()
         {
-            LogInfo();
+            DisplayInfo();
             
             Focus();
             
@@ -370,13 +385,10 @@ namespace EditorPlatformer.Editor
             return false;
         }
 
-        private void LogInfo()
+        private void DisplayInfo()
         {
-            EditorGUILayout.LabelField("Player Position", m_playerPosition.ToString());
-            EditorGUILayout.LabelField("Previous Player Position", m_previousPlayerPosition.ToString());
-            EditorGUILayout.LabelField("Is Grounded", m_isGrounded.ToString());
-            EditorGUILayout.LabelField("Last Key Pressed", m_lastPressedKey.ToString());
-            EditorGUILayout.LabelField("Key Pressed", Event.current.keyCode.ToString());
+            EditorGUILayout.LabelField(string.Empty, "Welcome to the Multi Editor-Window Platformer Game!");
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("Points", m_points.ToString());
         }
 
