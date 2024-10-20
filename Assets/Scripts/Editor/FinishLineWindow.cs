@@ -34,6 +34,12 @@ namespace EditorPlatformer.Editor
         {
             base.OnGUI();
 
+            if (isInFinishLine)
+            {
+                GUILayout.Label("You Win!");
+                return;
+            }
+            
             var sizeX = m_finishLineCollisionRect.size.x / Info.FINISH_LINE_VIEW_CHECK_COUNT;
             var sizeY = m_finishLineCollisionRect.size.y / Info.FINISH_LINE_VIEW_CHECK_COUNT;
             var isColorBlack = true;

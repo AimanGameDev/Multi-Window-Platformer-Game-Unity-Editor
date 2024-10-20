@@ -110,6 +110,9 @@ namespace EditorPlatformer.Editor
         private bool m_isShuttingDown;
         [SerializeField] 
         private int m_points;
+        [SerializeField] 
+        private bool m_isGameOver;
+
 
         private void OnEnable()
         {
@@ -117,6 +120,10 @@ namespace EditorPlatformer.Editor
             m_stopwatch.Start();
             m_ticks = 0;
             m_points = 0;
+            m_isGrounded = false;
+            m_lastPressedKey = KeyCode.None;
+            m_isShuttingDown = false;
+            m_isGameOver = false;
         }
 
         private void Add(ILevelWindow window)
@@ -169,6 +176,9 @@ namespace EditorPlatformer.Editor
             DisplayInfo();
             
             Focus();
+            
+            if(m_isGameOver)
+                return;
             
             if (Event.current.type == EventType.KeyDown)
             {
@@ -331,7 +341,7 @@ namespace EditorPlatformer.Editor
 
             if (m_finishLineWindow != null && m_finishLineWindow.isInFinishLine)
             {
-                Debug.Log("GG");
+                m_isGameOver = true;
             }
 
             var playerArgs = new PlayerArgs
